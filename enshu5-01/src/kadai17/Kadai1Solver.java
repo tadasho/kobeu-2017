@@ -74,6 +74,12 @@ public class Kadai1Solver {
 	/**
 	 * ソート済みの三角形のリストをみながら、色が異なる＆重ならない三角形のペアを探す。 ２重ループ
 	 */
+	/* Memo
+	 * for statementの
+	 * i >= 0 を i >= triangles.size() - 110
+	 * j >= 0 を j >= triangles.size() - 110
+	 * とすることにより同じ結果で実行時間を160[ms]ほどまで短縮できる。
+	*/
 	private void searchTrianglePair() {
 		for (int i = triangles.size() - 1; i >= 0; i--) {
 			outside: for (int j = triangles.size() - 1; j >= 0; j--) {
@@ -86,33 +92,10 @@ public class Kadai1Solver {
 				if (triangles.get(i).getColor() == triangles.get(j).getColor()) {
 					continue outside;
 				}
+				
 				// 重なり判定
-				ArrayList<Line2D.Double> lines = new ArrayList<Line2D.Double>();
-				lines.add(new Line2D.Double(triangles.get(i).getPoints().get(0).getX(),
-						triangles.get(i).getPoints().get(0).getY(), triangles.get(i).getPoints().get(1).getX(),
-						triangles.get(i).getPoints().get(1).getY()));
-				lines.add(new Line2D.Double(triangles.get(i).getPoints().get(0).getX(),
-						triangles.get(i).getPoints().get(0).getY(), triangles.get(i).getPoints().get(2).getX(),
-						triangles.get(i).getPoints().get(2).getY()));
-				lines.add(new Line2D.Double(triangles.get(i).getPoints().get(1).getX(),
-						triangles.get(i).getPoints().get(1).getY(), triangles.get(i).getPoints().get(2).getX(),
-						triangles.get(i).getPoints().get(2).getY()));
-				lines.add(new Line2D.Double(triangles.get(j).getPoints().get(0).getX(),
-						triangles.get(j).getPoints().get(0).getY(), triangles.get(j).getPoints().get(1).getX(),
-						triangles.get(j).getPoints().get(1).getY()));
-				lines.add(new Line2D.Double(triangles.get(j).getPoints().get(0).getX(),
-						triangles.get(j).getPoints().get(0).getY(), triangles.get(j).getPoints().get(2).getX(),
-						triangles.get(j).getPoints().get(2).getY()));
-				lines.add(new Line2D.Double(triangles.get(j).getPoints().get(1).getX(),
-						triangles.get(j).getPoints().get(1).getY(), triangles.get(j).getPoints().get(2).getX(),
-						triangles.get(j).getPoints().get(2).getY()));
-
-				for (int k = 0; k <= 2; k++) {
-					for (int l = 3; l <= 5; l++) {
-						if (lines.get(k).intersectsLine(lines.get(l))) {
-							continue outside;
-						}
-					}
+				if (triangles.get(i).overlapWith(triangles.get(j))) {
+					continue outside;
 				}
 
 				// 条件に適するものをanswerへ代入
@@ -149,8 +132,8 @@ public class Kadai1Solver {
 	 *
 	 */
 	private void genTriangles() {
-		// points を色ごとに分けて、genTriangles(Color, List<? extends Point>)を呼ぼう
-		// それが終わったら、Collections.sort をつかってソートしましょう。
+		// points を色ごとに分けて、genTriangles(Color, List<? extends Point>)を呼ぶ
+		// それが終わったら、Collections.sort をつかってソート
 		List<ColoredPoint> pointsOfBlue = new ArrayList<>();
 		List<ColoredPoint> pointsOfRed = new ArrayList<>();
 		List<ColoredPoint> pointsOfGreen = new ArrayList<>();
