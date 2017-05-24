@@ -16,6 +16,23 @@ public class ColoredPoint extends Point {
         super(p);
         this.color = c;
     }
+    /**
+	 * @return color
+	 */
+	public Color getColor() {
+		return color;
+	}
+	/**
+     * 点がクリックされたかどうか判定する
+     * @return
+     */
+    public boolean contain(Point p) {
+    	if (p.distance(this.getX(), this.getY()) < 8) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
 
     /**
      * 表示用メソッド
@@ -46,6 +63,4 @@ public class ColoredPoint extends Point {
     public static Color brightColor(Color c) {
         return new Color(c.getRed()/2+128, c.getGreen()/2+128, c.getBlue()/2+128);
     }
-
-
 }
