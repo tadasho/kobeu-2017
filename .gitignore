@@ -1,10 +1,5 @@
-# ignore kadai1-report.docx
-/enshu5-01/kadai1-report.docx
-# ignore kadai1-report.pdf
-/enshu5-01/kadai1-report.pdf
-
-# ignore kadai2-report.docx
-/enshu5-02/kadai2-report.docx
-# ignore kadai2-report.pdf
-/enshu5-02/kadai2-report.pdf
-
+enshu5-01/report
+enshu5-02/report
+language-engineering/kadai1/report
+language-engineering/kadai1/a.out
+language-engineering/kadai1/lex.yy.c
