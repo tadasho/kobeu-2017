@@ -7,6 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,7 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.MouseAdapter;
 
-public class Kadai2 extends JFrame {
+public class Kadai2 extends JFrame implements WindowListener {
 
     private JPanel contentPane;
     private JTextField positionField;
@@ -64,8 +73,7 @@ public class Kadai2 extends JFrame {
     public void setSelectedTriangles(Collection<ColoredTriangle> selectedTriangles) {
         kadaiPane.setSelectedTriangles(selectedTriangles);
     }
-
-
+    
     /**
      *  点の選択状態をリセット。再描画もおこなう。実装済み。参考にしてください。
      *  setSelectedPoints()側で再描画をするのが筋という考え方もある。
@@ -199,6 +207,7 @@ public class Kadai2 extends JFrame {
         operationPanel.add(btnResetPoints);
 
         problemSetup();
+        this.addWindowListener(this);
     }
     /**
      * 問題のセットアップや、点や三角形のリストの準備
@@ -210,5 +219,71 @@ public class Kadai2 extends JFrame {
         kadaiPane.setSelectedPoints(new ArrayList<ColoredPoint>());
         kadaiPane.setSelectedTriangles(new ArrayList<ColoredTriangle>());
     }
+
+    // ウィンドウが最初に可視になったときに呼び出される
+	@Override
+	public void windowOpened(WindowEvent e) {
+		try {
+			ObjectInputStream in=new ObjectInputStream(new FileInputStream("store-data.obj"));
+			StoreData dog = (StoreData) in.readObject();
+			in.close();
+
+			setPoints(dog.getPoints());
+			setTriangles(dog.getTriangles());
+			
+			System.out.println("Succeed StoreData Reading");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		
+	}
+
+	// ウィンドウのシステムメニューでウィンドウを閉じようとしたときに呼び出される。
+	@Override
+	public void windowClosing(WindowEvent e) {
+		try {
+			ObjectOutput out=new ObjectOutputStream(new FileOutputStream("store-data.obj"));
+			StoreData dog = new StoreData(getPoints(), getTriangles());
+			out.writeObject(dog);
+			out.flush();
+			out.close();
+			
+			System.out.println("Succceed StoreData Writing");
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		
+	}
 
 }
